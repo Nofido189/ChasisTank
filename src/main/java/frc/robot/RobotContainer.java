@@ -5,8 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.MoveWithConstantPower;
+import frc.robot.commands.MoveWithJoysticks;
 import frc.robot.subsystems.Chassis;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -26,7 +28,9 @@ public class RobotContainer {
   private final Chassis chassis;
 
   private final MoveWithConstantPower autonomusCommand;
-
+  // Robot Container will barely contain static
+  public Joystick leftJoystick = new Joystick(Constants.LEFT_JOYSTICKS);
+  public Joystick rightJoystick = new Joystick(Constants.RIGHT_JOYSTICK);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -36,7 +40,7 @@ public class RobotContainer {
     Constants.PORT_NUMBER_FRONTLEFT, Constants.PORT_NUMBER_REARLEFT);
     autonomusCommand = new MoveWithConstantPower(0.2, chassis);
     configureButtonBindings();
-
+    Command temp  = new MoveWithJoysticks(leftJoystick, rightJoystick, chassis);
   }
 
   /**
@@ -48,6 +52,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    
   }
 
   /**
