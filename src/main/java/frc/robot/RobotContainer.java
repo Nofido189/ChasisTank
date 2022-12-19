@@ -40,7 +40,6 @@ public class RobotContainer {
     Constants.PORT_NUMBER_FRONTLEFT, Constants.PORT_NUMBER_REARLEFT);
     autonomusCommand = new MoveWithConstantPower(0.2, chassis);
     configureButtonBindings();
-    Command temp  = new MoveWithJoysticks(leftJoystick, rightJoystick, chassis);
   }
 
   /**

@@ -12,17 +12,24 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
+
 //Static means anyone can access
 public final class Constants {
     public static final int PORT_NUMBER_FRONTRIGHT = 1;
     public static final int PORT_NUMBER_REARRIGHT = 2;
     public static final int PORT_NUMBER_FRONTLEFT = 3;
     public static final int PORT_NUMBER_REARLEFT = 4;
-    // public static final int PORT_NUMBER_GYRO = 14;
+    public static final int PORT_NUMBER_GYRO = 14;
     public static final boolean FRONTRIGHT_INVERTED = true;
     public static final boolean REARRIGHT_INVERTED = true;
     public static final boolean FRONTLEFT_INVERTED = false;
     public static final boolean REARLEFT_INVERTED = false;
     public static final int LEFT_JOYSTICKS = 0;
     public static final int RIGHT_JOYSTICK = 1;
+    public static final double INCH = 0.0254;
+    public static final double DIAM = 6*INCH;
+    public static final double PARMAETER = DIAM*Math.PI;
+    public static final int GEAR_RATIO = 12;
+    public static final int PULSE_PER_ROTATION = 2048;
+    public static final double METER_INDICATOR = 1/PARMAETER*GEAR_RATIO*PULSE_PER_ROTATION;
 }
