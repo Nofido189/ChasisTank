@@ -21,7 +21,7 @@ public final class Constants {
     public static final int PORT_NUMBER_REARLEFT = 4;
     public static final int PORT_NUMBER_GYRO = 14;
     public static final boolean FRONTRIGHT_INVERTED = true;
-    public static final boolean REARRIGHT_INVERTED = true;
+    public static final boolean REARRIGHT_INVERTED = false;
     public static final boolean FRONTLEFT_INVERTED = false;
     public static final boolean REARLEFT_INVERTED = false;
     public static final int LEFT_JOYSTICKS = 0;
