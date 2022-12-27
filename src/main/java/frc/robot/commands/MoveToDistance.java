@@ -4,21 +4,22 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix.Util;
-
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
 
 public class MoveToDistance extends CommandBase {
     private Chassis chassis;
     private double power;
-
+    private double distance;
+    private PigeonIMU gyroAngle;
     
     public MoveToDistance(Chassis chassis, double power){
         this.chassis = chassis;
         this.power = power;
+        this.distance = 0;
+        this.gyroAngle = chassis.getGyro();
         addRequirements(chassis);
     }
 
@@ -29,10 +30,9 @@ public class MoveToDistance extends CommandBase {
 
     @Override
     public void execute() {
-        //אני יודעת שכאן צריך כל הזמן לקבל את הדיסטנס/מיקום
-        //אבל אני לא יודעת איך עושים את זה
-        //ניסיתי להסתכל בקוד של נויה אבל הסתבכתי
-        //בנוסף, גם לא הבנתי מה ג'יירו עושה
+        double pulsePerMeter = (Constants.GEAR_RATIO*Constants.PULSE_PER_ROTATION)/Constants.PERIMETER;
+        double pulse = (chassis.getAverageLeftPosition()+chassis.getAverageRightPosition())/2;
+        this.distance = this.distance +(pulse/pulsePerMeter);
     }
 
     @Override
@@ -42,8 +42,9 @@ public class MoveToDistance extends CommandBase {
 
     // Returns true when the command should end.
     @Override
-    public boolean isFinished(double distance, double wantedDistance) {
-        if(distance == wantedDistance)
+    public boolean isFinished() {
+        //אנחנו רוצים שזה יפסיק אם זה סוטה/לא ישר? או שסתם רק רוצים לדעת *אם* זה ישר או לא
+        if((this.distance == 3.5) || (chassis.getGyro() != this.gyroAngle)) 
             return true;
         else
             return false;

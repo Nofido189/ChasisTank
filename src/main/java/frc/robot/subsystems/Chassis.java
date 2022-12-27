@@ -3,8 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -43,11 +41,21 @@ public class Chassis extends SubsystemBase {
      return gyro;
     }
 
-    public double getLeftPosition() {
-        return leftFront.getSelectedSensorPosition()/Constants.METER_INDICATOR;
+    public double getAverageLeftPosition() {
+        double leftFrontPosition = leftFront.getSelectedSensorPosition()/Constants.METER_INDICATOR;
+        double leftRearPosition = leftRear.getSelectedSensorPosition()/Constants.METER_INDICATOR;
+        return (leftFrontPosition+leftRearPosition)/2;
     }
 
-    public double getRightPosition() {
-        return rightFront.getSelectedSensorPosition()/Constants.METER_INDICATOR;
+    public double getAverageRightPosition() {
+        double rightFrontPosition = rightFront.getSelectedSensorPosition()/Constants.METER_INDICATOR;
+        double rightRearPosition = rightRear.getSelectedSensorPosition()/Constants.METER_INDICATOR;
+        return (rightFrontPosition+rightRearPosition)/2;
     }
+
+    // public double getAveragePosition(){
+    //     double leftAverage = Chassis.getAverageLeftPosition();
+    //     double rightAverage = Chassis.getAverageRightPosition();
+    //     return (leftAverage+rightAverage)/2;
+    // }
 }
