@@ -21,13 +21,16 @@ public class Chassis extends SubsystemBase {
         leftFront = new TalonFX(motorsIds[2]);
         leftRear = new TalonFX(motorsIds[3]);
         gyro = new PigeonIMU(Constants.PORT_NUMBER_GYRO);
-        // since each motor set is on different sides of the chassi, we must invert their motor input(?).
-        // because to one side, 1 == -1 to the other (rolling to the right or to the left):
+        // since each motor set is on different sides of the chassi, we must invert
+        // their motor input(?).
+        // because to one side, 1 == -1 to the other (rolling to the right or to the
+        // left):
         leftFront.setInverted(Constants.FRONTLEFT_INVERTED);
         leftRear.setInverted(Constants.REARLEFT_INVERTED);
         rightFront.setInverted(Constants.FRONTRIGHT_INVERTED);
         leftRear.setInverted(Constants.REARRIGHT_INVERTED);
-        // as to not waste space(?) we "tell" the rear motors to follow the front one's actions:
+        // as to not waste space(?) we "tell" the rear motors to follow the front one's
+        // actions:
         rightRear.follow(this.rightFront);
         leftRear.follow(this.leftFront);
     }
@@ -37,25 +40,23 @@ public class Chassis extends SubsystemBase {
         leftFront.set(ControlMode.PercentOutput, leftPower);
     }
 
-    public PigeonIMU getGyro(){
-     return gyro;
+    public double getAngle() {
+        return gyro.getFusedHeading();
     }
 
-    public double getAverageLeftPosition() {
-        double leftFrontPosition = leftFront.getSelectedSensorPosition()/Constants.METER_INDICATOR;
-        double leftRearPosition = leftRear.getSelectedSensorPosition()/Constants.METER_INDICATOR;
-        return (leftFrontPosition+leftRearPosition)/2;
+    // In meters
+    public double getLeftPosition() {
+        return leftFront.getSelectedSensorPosition() / Constants.PULSE_PER_METER;
     }
 
-    public double getAverageRightPosition() {
-        double rightFrontPosition = rightFront.getSelectedSensorPosition()/Constants.METER_INDICATOR;
-        double rightRearPosition = rightRear.getSelectedSensorPosition()/Constants.METER_INDICATOR;
-        return (rightFrontPosition+rightRearPosition)/2;
+    // In meters
+    public double getRightPosition() {
+        return rightFront.getSelectedSensorPosition() / Constants.PULSE_PER_METER;
     }
 
     // public double getAveragePosition(){
-    //     double leftAverage = Chassis.getAverageLeftPosition();
-    //     double rightAverage = Chassis.getAverageRightPosition();
-    //     return (leftAverage+rightAverage)/2;
+    // double leftAverage = Chassis.getAverageLeftPosition();
+    // double rightAverage = Chassis.getAverageRightPosition();
+    // return (leftAverage+rightAverage)/2;
     // }
 }

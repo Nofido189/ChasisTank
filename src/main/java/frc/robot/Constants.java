@@ -20,9 +20,9 @@ public final class Constants {
     public static final int PORT_NUMBER_FRONTLEFT = 3;
     public static final int PORT_NUMBER_REARLEFT = 4;
     public static final int PORT_NUMBER_GYRO = 14;
-    public static final boolean FRONTRIGHT_INVERTED = true;
-    public static final boolean REARRIGHT_INVERTED = false;
-    public static final boolean FRONTLEFT_INVERTED = true;
+    public static final boolean FRONTRIGHT_INVERTED = true; //??
+    public static final boolean REARRIGHT_INVERTED = true;
+    public static final boolean FRONTLEFT_INVERTED = false;
     public static final boolean REARLEFT_INVERTED = false;
     public static final int LEFT_JOYSTICKS = 0;
     public static final int RIGHT_JOYSTICK = 1;
@@ -31,5 +31,5 @@ public final class Constants {
     public static final double PERIMETER = DIAM*Math.PI; //היקף
     public static final int GEAR_RATIO = 12;
     public static final int PULSE_PER_ROTATION = 2048;
-    public static final double METER_INDICATOR = 1/PERIMETER*GEAR_RATIO*PULSE_PER_ROTATION;
+    public static final double PULSE_PER_METER = (GEAR_RATIO*PULSE_PER_ROTATION)/PERIMETER;
 }

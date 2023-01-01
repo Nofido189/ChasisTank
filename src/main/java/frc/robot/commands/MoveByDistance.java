@@ -9,30 +9,31 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
 
-public class MoveToDistance extends CommandBase {
+public class MoveByDistance extends CommandBase {
     private Chassis chassis;
     private double power;
+    private double wantedDistance;
     private double distance;
-    private PigeonIMU gyroAngle;
+    private double gyroAngle;
     
-    public MoveToDistance(Chassis chassis, double power){
+    public MoveByDistance(Chassis chassis, double power, double wantedDistance){
         this.chassis = chassis;
         this.power = power;
-        this.distance = 0;
-        this.gyroAngle = chassis.getGyro();
+        this.wantedDistance = wantedDistance;
+        this.gyroAngle = chassis.getAngle().getFusedHeading();
         addRequirements(chassis);
     }
 
     @Override
     public void initialize() {
         chassis.setPower(power, power);
+        this.distance = 0; //probably shouldnt be a field, but didnt know how to reach it from execute otherwise
     }
 
     @Override
     public void execute() {
-        double pulsePerMeter = (Constants.GEAR_RATIO*Constants.PULSE_PER_ROTATION)/Constants.PERIMETER;
-        double pulse = (chassis.getAverageLeftPosition()+chassis.getAverageRightPosition())/2;
-        this.distance = this.distance +(pulse/pulsePerMeter);
+        double pulse = ((chassis.getLeftPosition()+chassis.getRightPosition())/2)/ Constants.PULSE_PER_METER;
+        this.distance = this.distance + pulse;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class MoveToDistance extends CommandBase {
     @Override
     public boolean isFinished() {
         //אנחנו רוצים שזה יפסיק אם זה סוטה/לא ישר? או שסתם רק רוצים לדעת *אם* זה ישר או לא
-        if((this.distance == 3.5) || (chassis.getGyro() != this.gyroAngle)) 
+        if((distance >= wantedDistance) || (chassis.getAngle() != this.gyroAngle)) 
             return true;
         else
             return false;
