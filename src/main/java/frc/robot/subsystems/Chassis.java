@@ -41,7 +41,11 @@ public class Chassis extends SubsystemBase {
     }
 
     public double getAngle() {
-        return gyro.getFusedHeading();
+        return ((gyro.getFusedHeading() % 360) + 360) % 360;
+    }
+
+    public void setAngleZero(){
+        gyro.setFusedHeading(0);
     }
 
     // In meters
@@ -54,9 +58,4 @@ public class Chassis extends SubsystemBase {
         return rightFront.getSelectedSensorPosition() / Constants.PULSE_PER_METER;
     }
 
-    // public double getAveragePosition(){
-    // double leftAverage = Chassis.getAverageLeftPosition();
-    // double rightAverage = Chassis.getAverageRightPosition();
-    // return (leftAverage+rightAverage)/2;
-    // }
 }

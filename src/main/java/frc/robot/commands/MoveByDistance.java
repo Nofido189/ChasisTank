@@ -15,40 +15,46 @@ public class MoveByDistance extends CommandBase {
     private double wantedDistance;
     private double distance;
     private double originalGyroAngle;
-    
-    public MoveByDistance(Chassis chassis, double power, double wantedDistance){
+
+    public MoveByDistance(Chassis chassis, double power, double wantedDistance) {
         this.chassis = chassis;
         this.power = power;
         this.wantedDistance = wantedDistance;
+        chassis.setAngleZero();
         addRequirements(chassis);
     }
 
     @Override
     public void initialize() {
         chassis.setPower(power, power);
-        this.distance = 0; //probably shouldnt be a field, but didnt know how to reach it from execute otherwise
+        this.distance = 0; // probably shouldnt be a field, but didnt know how to reach it from execute
+                           // otherwise
         this.originalGyroAngle = chassis.getAngle();
     }
 
     @Override
     public void execute() {
-        double movedDistanceInMeters =((chassis.getLeftPosition()+chassis.getRightPosition())/2)/ Constants.PULSE_PER_METER;
-        // Calculated average position (which is also somehow == pulses) and divided it by ppm; which gives us the distance we've made so far
+        double movedDistanceInMeters = ((chassis.getLeftPosition() + chassis.getRightPosition()) / 2)/ Constants.PULSE_PER_METER;
+        // Calculated average position (which is also somehow == pulses) and divided it
+        // by ppm; which gives us the distance we've made so far
         this.distance = this.distance + movedDistanceInMeters;
-        if(chassis.getAngle() != originalGyroAngle){
-            
+        if (chassis.getAngle() >= (originalGyroAngle + Constants.ANGLE_LIMIT)) {
+            chassis.setPower(power - (power / 4), power + (power / 4));
+        }
+        if (chassis.getAngle() <= (originalGyroAngle - Constants.ANGLE_LIMIT)) {
+            chassis.setPower(power + (power / 4), power - (power / 4));
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        chassis.setPower(0,0);
+        chassis.setPower(0, 0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if(distance >= wantedDistance) 
+        if (distance >= wantedDistance)
             return true;
         else
             return false;

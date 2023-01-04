@@ -32,4 +32,5 @@ public final class Constants {
     public static final int GEAR_RATIO = 12;
     public static final int PULSE_PER_ROTATION = 2048;
     public static final double PULSE_PER_METER = (GEAR_RATIO*PULSE_PER_ROTATION)/PERIMETER;
+    public static final double ANGLE_LIMIT = 5;
 }
