@@ -14,13 +14,12 @@ public class MoveByDistance extends CommandBase {
     private double power;
     private double wantedDistance;
     private double distance;
-    private double gyroAngle;
+    private double originalGyroAngle;
     
     public MoveByDistance(Chassis chassis, double power, double wantedDistance){
         this.chassis = chassis;
         this.power = power;
         this.wantedDistance = wantedDistance;
-        this.gyroAngle = chassis.getAngle().getFusedHeading();
         addRequirements(chassis);
     }
 
@@ -28,12 +27,17 @@ public class MoveByDistance extends CommandBase {
     public void initialize() {
         chassis.setPower(power, power);
         this.distance = 0; //probably shouldnt be a field, but didnt know how to reach it from execute otherwise
+        this.originalGyroAngle = chassis.getAngle();
     }
 
     @Override
     public void execute() {
-        double pulse = ((chassis.getLeftPosition()+chassis.getRightPosition())/2)/ Constants.PULSE_PER_METER;
-        this.distance = this.distance + pulse;
+        double movedDistanceInMeters =((chassis.getLeftPosition()+chassis.getRightPosition())/2)/ Constants.PULSE_PER_METER;
+        // Calculated average position (which is also somehow == pulses) and divided it by ppm; which gives us the distance we've made so far
+        this.distance = this.distance + movedDistanceInMeters;
+        if(chassis.getAngle() != originalGyroAngle){
+            
+        }
     }
 
     @Override
@@ -44,8 +48,7 @@ public class MoveByDistance extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        //אנחנו רוצים שזה יפסיק אם זה סוטה/לא ישר? או שסתם רק רוצים לדעת *אם* זה ישר או לא
-        if((distance >= wantedDistance) || (chassis.getAngle() != this.gyroAngle)) 
+        if(distance >= wantedDistance) 
             return true;
         else
             return false;

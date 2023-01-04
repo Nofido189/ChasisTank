@@ -34,10 +34,8 @@ public class MoveWithJoysticks extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double leftValue = Utils.reduceJoystickError(leftJoystick.getY());
-        double rightValue = Utils.reduceJoystickError(rightJoystick.getY());
-        double leftPower = Utils.joystickValue2Power(leftValue);
-        double rightPower = Utils.joystickValue2Power(rightValue);
+        double leftPower = Utils.joystickValue2Power(Utils.reduceJoystickError(leftJoystick.getY()));
+        double rightPower = Utils.joystickValue2Power(Utils.reduceJoystickError(rightJoystick.getY()));
         chassis.setPower(leftPower, rightPower);
     }
     
