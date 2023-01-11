@@ -8,12 +8,12 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
+import frc.robot.Utils;
 
 public class MoveByDistance extends CommandBase {
     private Chassis chassis;
     private double power;
     private double wantedDistance;
-    private double distance;
     private double originalGyroAngle;
 
     public MoveByDistance(Chassis chassis, double power, double wantedDistance) {
@@ -26,24 +26,19 @@ public class MoveByDistance extends CommandBase {
 
     @Override
     public void initialize() {
-        chassis.setPower(power, power);
-        this.distance = 0; // probably shouldnt be a field, but didnt know how to reach it from execute
-                           // otherwise
         this.originalGyroAngle = chassis.getAngle();
     }
 
     @Override
     public void execute() {
-        double movedDistanceInMeters = ((chassis.getLeftPosition() + chassis.getRightPosition()) / 2)/ Constants.PULSE_PER_METER;
-        // Calculated average position (which is also somehow == pulses) and divided it
-        // by ppm; which gives us the distance we've made so far
-        this.distance = this.distance + movedDistanceInMeters;
         if (chassis.getAngle() >= (originalGyroAngle + Constants.ANGLE_LIMIT)) {
-            chassis.setPower(power - (power / 4), power + (power / 4));
+            chassis.setPower(power - (power * Constants.MODERATOR), power + (power * Constants.MODERATOR));
         }
-        if (chassis.getAngle() <= (originalGyroAngle - Constants.ANGLE_LIMIT)) {
-            chassis.setPower(power + (power / 4), power - (power / 4));
+        else if (chassis.getAngle() <= (originalGyroAngle - Constants.ANGLE_LIMIT)) {
+            chassis.setPower(power + (power * Constants.MODERATOR), power - (power * Constants.MODERATOR));
         }
+        else
+            chassis.setPower(power, power);
     }
 
     @Override
@@ -54,7 +49,7 @@ public class MoveByDistance extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (distance >= wantedDistance)
+        if (Utils.getPositionOfRobotInMeters(chassis.getLeftPosition() + chassis.getRightPosition()) >= wantedDistance)
             return true;
         else
             return false;
